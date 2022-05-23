@@ -8,15 +8,26 @@ namespace ch10
         static void Main(string[] args)
         {
             GuessingGame mainGame = new GuessingGame();
+            // Function sets number of MaxGuesses
             mainGame.AskForDifficulty();
-            for (int i = 0; i < mainGame.maxGuesses; i++)
+            int i = 0;
+            while (mainGame.MaxGuesses == -1 || i < mainGame.MaxGuesses)
             {
-                Console.WriteLine($"\nThis is guess number {i + 1}");
+                if (mainGame.MaxGuesses != -1)
+                {
+                    Console.WriteLine($"\nThis is guess number {i + 1}");
+                    i++;
+                }
                 mainGame.AskForNumber();
-                if (mainGame.isCorrectGuess())
+                if (mainGame.IsCorrectGuess())
                 {
                     break;
                 }
+            }
+
+            if (mainGame.MaxGuesses == -1)
+            {
+                Console.WriteLine("\n\n\n\n\nYou dirty cheater . . .\n\n\n\n\n");
             }
         }
 
@@ -25,20 +36,21 @@ namespace ch10
 
     public class GuessingGame
     {
-        public int secretNumber { get; private set; }
-        public int parsedUserNumber { get; private set; }
-        public int maxGuesses { get; private set;}
-        public Dictionary<string, int> difficultySetting = new Dictionary<string, int>{
+        public int SecretNumber { get; private set; }
+        public int ParsedUserNumber { get; private set; }
+        public int MaxGuesses { get; private set; }
+        public Dictionary<string, int> DifficultySetting = new Dictionary<string, int>{
             {"Easy", 8},
             {"Medium", 6},
-            {"Hard", 4}
+            {"Hard", 4},
+            {"Cheater", -1}
         };
 
         public GuessingGame()
         {
 
-            secretNumber = new Random().Next(1, 101);
-            Console.WriteLine($"Secret number is {secretNumber}\n");
+            SecretNumber = new Random().Next(1, 101);
+            Console.WriteLine($"Secret number is {SecretNumber}\n");
         }
 
         public void AskForDifficulty()
@@ -48,8 +60,8 @@ namespace ch10
             {
                 Console.WriteLine("Please Select a Difficulty Setting (Easy, Medium, Hard) . . .");
                 difficultyInput = Console.ReadLine();
-            } while (!difficultySetting.ContainsKey(difficultyInput));
-            maxGuesses = difficultySetting[difficultyInput];
+            } while (!DifficultySetting.ContainsKey(difficultyInput));
+            MaxGuesses = DifficultySetting[difficultyInput];
         }
 
         public void AskForNumber()
@@ -68,14 +80,14 @@ namespace ch10
                     Console.WriteLine("Invlaid entry. Please guess a valid integer: ");
                 }
             } while (!isEntryValid);
-            parsedUserNumber = userNumber;
+            ParsedUserNumber = userNumber;
         }
 
-        public bool isCorrectGuess()
+        public bool IsCorrectGuess()
         {
             void GiveHint()
             {
-                if (secretNumber < parsedUserNumber)
+                if (SecretNumber < ParsedUserNumber)
                 {
                     Console.WriteLine("Your guess was too high");
                 }
@@ -85,7 +97,7 @@ namespace ch10
                 }
             }
 
-            if (secretNumber == parsedUserNumber)
+            if (SecretNumber == ParsedUserNumber)
             {
                 Console.WriteLine(@"░░░░░░░░░▄░░░░░░░░░░░░░░▄░░░░
 ░░░░░░░░▌▒█░░░░░░░░░░░▄▀▒▌░░░
