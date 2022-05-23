@@ -10,14 +10,31 @@ namespace ch10
             GuessingGame mainGame = new GuessingGame();
             // Function sets number of MaxGuesses
             mainGame.AskForDifficulty();
-            int i = 0;
-            while (mainGame.MaxGuesses == -1 || i < mainGame.MaxGuesses)
+            while (true)
             {
                 if (mainGame.MaxGuesses != -1)
                 {
-                    Console.WriteLine($"\nThis is guess number {i + 1}");
-                    i++;
+                    void recursiveFunction(int i)
+                    {
+                        if (i == 0)
+                        {
+                            return;
+                        }
+                        Console.WriteLine($"\nThis is guess #{mainGame.MaxGuesses-i+1}");
+                        mainGame.AskForNumber();
+                        if(mainGame.IsCorrectGuess())
+                        {
+                            return;
+                        }
+                        recursiveFunction(i-1);
+                    }
+
+                    recursiveFunction(mainGame.MaxGuesses);
+                    return;
+                    // Console.WriteLine($"\nThis is guess number {i + 1}");
+                    // i++;
                 }
+                Console.WriteLine("");
                 mainGame.AskForNumber();
                 if (mainGame.IsCorrectGuess())
                 {
